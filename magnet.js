@@ -3,46 +3,22 @@
 var http = require('http'),
 fs = require('fs'),
 sys = require('sys'),
-url = require('url'),
-xml = require('./lib/node-xml');
+url = require('url');
 
 
-function getImages(content, callback) {
-  var parser = new xml.SaxParser(function(cb) {
-    var images = new Array();
+function getImages(content) {
+  var scriptFilter = /<script.*>.*<\/script>/
+  var imageFilter = /<img .* src=['"]{1}([\S]*)['"]{1}\s?(.*)?\/>/g;
 
-    cb.onStartDocument(function() { });
 
-    cb.onEndDocument(function() {     
-      callback(images);
-    });
-
-    cb.onStartElementNS(function(elem, attrs, prefix, uri, namespaces) {
-      current_element = elem.toLowerCase();
-      sys.puts(current_element)
-      if(current_element == 'img') {
-        sys.puts(attrs)
-        //images.push(attrs["src"]) 
-      }
-    });
-
-    cb.onEndElementNS(function(elem, prefix, uri) {
-    });
-
-    cb.onCharacters(function (chars) { });
-    cb.onCdata(function(chars) { } );
-
-    cb.onWarning(function(msg) {
-      sys.puts('<WARNING>'+msg+"</WARNING>");
-    });
-
-    cb.onError(function(msg) {
-      sys.puts('<ERROR>'+JSON.stringify(msg)+"</ERROR>");
-    });
-
-  });
-
-  parser.parseString(content)
+  content = content.replace(scriptFilter, "");
+  
+  var match;
+  while (match = imageFilter.exec(content)) {
+    if(match != null && match != undefined) {
+      sys.puts(match[1])
+    }
+  }
 }
 
 
@@ -66,11 +42,7 @@ function httpGet(myUrl,crawl) {
 }
 
 function crawlerfunct(content) {
-  getImages(content, function(images) {
-    images.forEach(function(image) {
-      sys.puts(image);
-    }); 
-  });
+  getImages(content);
 }
 
 try {
