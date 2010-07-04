@@ -10,21 +10,30 @@ function httpGet(myUrl,crawl) {
   var parsedUrl = url.parse(myUrl)
   var connection = http.createClient(80, parsedUrl.host);
   var getPath = parsedUrl.pathname
-  var request = connection.reques('GET', getPath,  {"host": parsedUrl.host,"User-Agent": "magnets.js"});
+  var request = connection.request('GET', getPath,  {"host": parsedUrl.host,"User-Agent": "magnets.js"});
 
   request.addListener("response", function(response) {
+    var responseBody = ""
     response.setEncoding("utf8");
-    response.addListener("data", function(chunk) { response += chunk });
-    response.addListener("end", function() {
-      crawl(response)
+    response.addListener("data", function(chunk) { 
+      responseBody += chunk
     });
-    request.end();
+    response.addListener("end", function() {
+      sys.puts("end!");
+      crawl(responseBody)
+    });
   });
+  request.end();
 }
 
 function crawlerfunct(xml) {
   sys.puts(xml)
 }
 
-var crawlUrl = "http://www.soup.io/everyone"
-httpGet(crawlUrl,crawlerfunct)
+try {
+  sys.puts("Start crawling");
+  var crawlUrl = "http://www.soup.io/everyone"
+  httpGet(crawlUrl,crawlerfunct)
+} catch(ex) {
+    sys.puts("Error: " + puts);
+}
