@@ -23,7 +23,7 @@ function getImages(content) {
 }
 
 
-function httpGet(myUrl, callback, encoding) {
+exports.httpGet = function httpGet(myUrl, callback, encoding) {
   var parsedUrl = url.parse(myUrl)
   var connection = http.createClient(80, parsedUrl.host);
   var getPath = parsedUrl.pathname
@@ -42,15 +42,15 @@ function httpGet(myUrl, callback, encoding) {
   request.end();
 }
 
-
 function downloadImages(images) {
   images.forEach(function(image) {
     httpGet(image, saveImage, "binary");
   });
 }
-
-function saveImage(image) {
-  fs.writeFile('test.jpg', image, function (err) {
+var a = 0
+exports.saveImage = function saveImage(image) {
+  fs.writeFile('test'+a+'.jpg', image,"binary", function (err) {
+          a+=1
     if (err) throw err;
     sys.puts('It\'s saved!');
   });
@@ -61,6 +61,6 @@ function crawlerfunct(content) {
   downloadImages(images);
 }
 
-sys.puts("Start crawling");
-var crawlUrl = "http://www.soup.io/everyone"
-httpGet(crawlUrl,crawlerfunct, "utf8")
+// sys.puts("Start crawling");
+// var crawlUrl = "http://www.soup.io/everyone"
+// httpGet(crawlUrl,crawlerfunct, "utf8")
