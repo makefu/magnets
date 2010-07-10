@@ -9,18 +9,22 @@ function crawlerfunct(content) {
 function getImages(content) {
   content = content.data;
   var imageFilter = /<img .* src=['"]{1}([\S]*)['"]{1}\s?(.*)\/>/g;
-  var refFilter = /<a.*href=['"]{1}([\S]*)['"]{1}\s?class="lightbox"(.*)?>/g
+  var refFilter = /<a .*href=['"]{1}([\S]*)['"]{1}\s?class="lightbox"(.*)>/g
   var images = new Array();
 
   var match;
   //TODO: REFACTOR ME!
   while (match = imageFilter.exec(content)) {
     if(match != null && match != undefined) {
+      if( ! match[0].match(/-square/)) {
+        sys.puts(match[0])
         images.push(match[1]);
+      }
     }
   }
   while (match = refFilter.exec(content)) {
     if(match != null && match != undefined) {
+      sys.puts(match[0])
       images.push(match[1]);
     }
   }
