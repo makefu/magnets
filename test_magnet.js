@@ -55,36 +55,37 @@ function getMatches(regex, content) {
 function crawl(crawlUrl  ) {
     crawlUrl = crawlUrl || "http://www.soup.io/everyone";
 
-    log.info("Start crawling SoupIO");
-    mag.httpGet({url: crawlUrl, data: ''}, crawlerfunct, "utf8");
+    var img = new mag.Image(crawlUrl)
+    log.info("Start crawling SoupIO:"+crawlUrl);
+    mag.httpGet(img, crawlerfunct, "utf8");
 }
 
 function crawlBack(cUrl) {
     cUrl = cUrl || "http://www.soup.io/everyone";
     log.info("crawling " + cUrl);
-//    crawl(cUrl);
+    crawl(cUrl);
     getNextUrl(cUrl);
 }
 
 function getNextUrl(cUrl) {
     //TODO refactor me ( do not want to request webpage again ...
     log.debug('trying to get data from :'+cUrl);
-    mag.httpGet(  {url: cUrl, data: ''},function(ret){
-            var mUrl = parseNextUrl(ret);
-            if ( url != undefined ) {
-                setTimeout( crawlBack(mUrl),TIMEOUT);
-            }
-        });
+    var img = new mag.Image(cUrl)
+    mag.httpGet(img  ,function(ret) {
+      var mUrl = parseNextUrl(ret);
+      if ( mUrl != undefined ) {
+        setTimeout( function () {crawlBack(mUrl) },TIMEOUT); }
+    });
 }
 
 function parseNextUrl(content) {
-    urlPattern = /SOUP.Endless.next_url = \'([\S]*)\'/ ;
-    match = urlPattern.exec(content.data);
-
+    var urlPattern = /<a href=\"([\S]*)\" onclick=\"SOUP.Endless.getMoreBelow/
+    var match = urlPattern.exec(content.data)
     if(match != null && match != undefined) {
-        log.debug("next url is: "+ match[1]);
         var parsedUrl = url.parse(content.url);
-        return parsedUrl.protocol+'//'+parsedUrl.host+match[1];
+        var front =parsedUrl.protocol+'//'+parsedUrl.host+match[1]
+        log.debug("next url is: "+ front);
+        return front
     } else {
         // this should never happen
         // means we reached the end of the soup.io

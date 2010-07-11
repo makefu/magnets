@@ -5,3 +5,9 @@ TODO:
   Live Ticker ( scheduler )
   Other Plugins
   Backwards grabbing
+
+
+----
+Workaround to delete downloaded html files:
+
+for i in *; do file $i; done  | grep HTML | awk '{print $1}' | sed -e 's/://' | xargs rm -v
