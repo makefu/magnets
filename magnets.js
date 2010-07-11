@@ -4,22 +4,29 @@ var http = require('http'),
 fs = require('fs'),
 sys = require('sys'),
 url = require('url'),
-crypto = require('crypto');
-
+crypto = require('crypto'),
+logging = require('./lib/streamlogger');
+log = new logging.StreamLogger('./log/magnets.log');
+log.level = log.levels.debug;
+exports.log = log;
 function Image(imageUrl) {
-  return {
-    url : imageUrl,
-    fileName : imageUrl.split('/').pop(),
-    data : "",
-    hash : ""
-  };
+    this.url = imageUrl;
+    this.fileName = imageUrl.split('/').pop();
+    this.data = "";
+    this.hash = "";
+    this.toString = function () { 
+        return  "url: " + this.url + 
+                " filename: " + this.fileName + 
+                " hash: "+ this.hash; 
+    } 
 }
 
 function httpGet(image, callback, encoding) {
+    log.debug('parsing url:' + image.url);
   var parsedUrl = url.parse(image.url);
   var connection = http.createClient(80, parsedUrl.host);
   var getPath = parsedUrl.pathname;
-  sys.puts('connecting to'+image.url)
+  log.debug('connecting to'+image.url)
   var request = connection.request('GET', getPath,  {"host": parsedUrl.host,"User-Agent": "fucking magnets"});
 
   request.addListener("response", function(response) {
@@ -36,16 +43,27 @@ function httpGet(image, callback, encoding) {
 
 function downloadImages(imageUrls) {
   imageUrls.forEach(function(imageUrl) {
-    httpGet(new Image(imageUrl), saveImage, "binary");
+          var img = new Image(imageUrl);
+    fs.readFile("./images/" + img.fileName, function(err,data) { 
+        if ( err ) {
+            httpGet(img, saveImage, "binary");
+        }else {
+            log.debug( "File already exists: " + img)
+        }
+        });
   });
 }
 
 function saveImage(image) {
   // do not know yet what to use it for, but time will come...
   image.hash = crypto.createHash('md5').update(image).digest("hex");
+  //log.debug('writing file:' + image.fileName + ' with hash :' + image.hash + " loaded from : 
+  log.debug('writing file: ' + image.toString() )
   fs.writeFile("./images/" + image.fileName, image.data,"binary", function (err) {
     if (err) throw err;
-    sys.puts(image.fileName+' saved!');
+    log.info(image.fileName+' saved!');
+    log.debug(" * " + image);
+    
   });
 }
 
