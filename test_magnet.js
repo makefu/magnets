@@ -68,6 +68,8 @@ function crawlBack(cUrl) {
     getNextUrl(cUrl);
 }
 
+
+/// TODO rename me, getNextUrl shoud return just the string of the next url
 function getNextUrl(cUrl) {
     //TODO refactor me ( do not want to request webpage again ...
     log.debug('trying to get data from :'+cUrl);
@@ -86,7 +88,7 @@ function getNextUrl(cUrl) {
         setTimeout( function () {crawlBack(mUrl) },TIMEOUT); }
     });
 }
-
+/// WARNING: parseNextUrl is now getNextUrl
 function parseNextUrl(content) {
     var urlPattern = /<a href=\"([\S]*)\" onclick=\"SOUP.Endless.getMoreBelow/
     var match = urlPattern.exec(content.data)
