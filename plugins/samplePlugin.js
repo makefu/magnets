@@ -15,6 +15,16 @@ global.BACKWARDS = MAIN
  *
  * this function should return an array of picture urls to be downloaded
  * from a given http Content
+ *
+ * This function should ONLY return an array of the actual pictures.
+ * That means, that on some pages ( e.g. 9gag) this function might do
+ * autonomous http-requests for content-pages and parse the interesing
+ * pictures from there.
+ *
+ * TODO think about how to collect picture urls after asynchronous http
+ * requests!
+ *
+ *
  * @param content of webpage
  * @return array of urls
  */
