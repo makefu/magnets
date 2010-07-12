@@ -31,9 +31,7 @@ function getImages(content) {
   }
 
   var refImages  = getMatches(refFilter, content);
-
   return refImages.concat(images);
-
 }
 
 function getMatches(regex, content) {
@@ -53,7 +51,7 @@ function getMatches(regex, content) {
 /*
  * @brief live crawl of main page
  */
-function crawl(crawlUrl  ) {
+function crawl(crawlUrl) {
     crawlUrl = crawlUrl || "http://www.soup.io/everyone";
 
     var img = new mag.Image(crawlUrl)
@@ -72,22 +70,24 @@ function crawlBack(cUrl) {
 /// TODO rename me, getNextUrl shoud return just the string of the next url
 function getNextUrl(cUrl) {
     //TODO refactor me ( do not want to request webpage again ...
-    log.debug('trying to get data from :'+cUrl);
+    log.debug('trying to get data from :' + cUrl);
     var img = new mag.Image(cUrl)
     mag.httpGet(img  ,function(ret) {
       var mUrl = parseNextUrl(ret);
       var imgs = getImages(ret) ;
+
       if ( imgs.length == 0 ) {
         TIMEOUT = 500;
-      }
-      else {
+      } else {
         TIMEOUT = DEFAULT_TIMEOUT;
         mag.downloadImages(imgs);
       }
       if ( mUrl != undefined ) {
-        setTimeout( function () {crawlBack(mUrl) },TIMEOUT); }
+        setTimeout( function () {crawlBack(mUrl) },TIMEOUT); 
+      }
     });
 }
+
 /// WARNING: parseNextUrl is now getNextUrl
 function parseNextUrl(content) {
     var urlPattern = /<a href=\"([\S]*)\" onclick=\"SOUP.Endless.getMoreBelow/
@@ -101,9 +101,12 @@ function parseNextUrl(content) {
         // this should never happen
         // means we reached the end of the soup.io
         log.warn("Didn't find next url, assumed we reached the end of soup.io");
-
         return undefined;
     }
 }
 
-crawlBack ();
+try {
+  crawlBack ();
+} catch(ex) {
+  log.error("exception caught: " + ex);
+}
