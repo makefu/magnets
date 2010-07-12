@@ -5,7 +5,8 @@ var mag = require('./lib/magnetlib'),
     url = require('url');
 
 var log = mag.log;
-var TIMEOUT = 3000;
+var DEFAULT_TIMEOUT = 3000;
+var TIMEOUT =DEFAULT_TIMEOUT;
 var MAINPAGE="http://www.soup.io/everyone";
 
 function crawlerfunct(content) {
@@ -63,7 +64,7 @@ function crawl(crawlUrl  ) {
 function crawlBack(cUrl) {
     cUrl = cUrl || "http://www.soup.io/everyone";
     log.info("crawling " + cUrl);
-    crawl(cUrl);
+    //crawl(cUrl);
     getNextUrl(cUrl);
 }
 
@@ -73,6 +74,14 @@ function getNextUrl(cUrl) {
     var img = new mag.Image(cUrl)
     mag.httpGet(img  ,function(ret) {
       var mUrl = parseNextUrl(ret);
+      var imgs = getImages(ret) ;
+      if ( imgs.length == 0 ) {
+        TIMEOUT = 500;
+      }
+      else {
+        TIMEOUT = DEFAULT_TIMEOUT;
+        mag.downloadImages(imgs);
+      }
       if ( mUrl != undefined ) {
         setTimeout( function () {crawlBack(mUrl) },TIMEOUT); }
     });
