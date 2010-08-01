@@ -5,11 +5,11 @@ var MAIN = "http://example.org/"
 
 /// main page for crawling live streams
 
-global.LIVE=  MAIN
+exports.LIVE=  MAIN
 
 /// begin of crawling for crawling backwards
-global.BACKWARDS = MAIN 
-
+exports.BACKWARDS = MAIN 
+exports.NAME = "Sample Plugin"
 
 /* @brief returns all funny picture from given http-source
  *
@@ -28,7 +28,7 @@ global.BACKWARDS = MAIN
  * @param content of webpage
  * @return array of urls
  */
-global.getImages = function getImages(content) { 
+exports.getImages = function getImages(content) { 
     return new Array();
 };
 
@@ -38,5 +38,6 @@ global.getImages = function getImages(content) {
  * @param the content of the page
  * @return the url string 
  */
-global.getNextUrl = function getNextUrl(content) {
+exports.getNextUrl = function getNextUrl(content) {
+  return MAIN;
 };
