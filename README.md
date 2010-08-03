@@ -1,7 +1,7 @@
 FUCKING MAGNETS HOW DO THEY WORK?
 ---------------------------------
 
-This project is designed to be a modular image grabber/crawler.
+This project is designed to be a modular image grabber/crawler written in node.js.
 
 It's main purpose is derived from this XKCD quote:
 
@@ -11,6 +11,12 @@ It's main purpose is derived from this XKCD quote:
 [Quote from XKCD](http://xkcd.com/512/)
 
 The name is was borrowed from [the 'fucking magnets' meme](http://knowyourmeme.com/memes/f-cking-magnets-how-do-they-work).
+
+Used node.js libraries:
+=======================
+  
+  * [http://github.com/bentomas/trollopjs](Trollopjs for commandline parsing)
+  * [http://github.com/andrewvc/node-streamlogger](Node-Streamlogger for logging)
 
 TODO:
 =====
