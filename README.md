@@ -13,6 +13,7 @@ TODO:
   * Other Plugins
   * Backwards grabbing
   * Add debugging and inspection howto
+  * Support commandline options like loglevel 
 
 
 Workaround to delete downloaded html files:
