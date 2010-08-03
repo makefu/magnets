@@ -10,7 +10,7 @@ It's main purpose is derived from this XKCD quote:
 
 [Quote from XKCD](http://xkcd.com/512/)
 
-The name is was borrowed from [the 'fucking magnets' meme](http://knowyourmeme.com/memes/f-cking-magnets-how-do-they-work).
+The name was borrowed from [the 'fucking magnets' meme](http://knowyourmeme.com/memes/f-cking-magnets-how-do-they-work).
 
 Used node.js libraries:
 =======================
