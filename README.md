@@ -18,4 +18,4 @@ TODO:
 Workaround to delete downloaded html files:
 ===========================================
 
-for i in *; do file $i; done  | grep HTML | awk '{print $1}' | sed -e 's/://' | xargs rm -v
+        for i in *; do file $i; done  | grep HTML | awk '{print $1}' | sed -e 's/://' | xargs rm -v
