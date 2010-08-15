@@ -17,11 +17,12 @@ Used node.js libraries:
   
   * [http://github.com/bentomas/trollopjs](Trollopjs for commandline parsing)
   * [http://github.com/andrewvc/node-streamlogger](Node-Streamlogger for logging)
+  * [http://github.com/tautologistics/node-htmlparser](Node-Htmlparser for logging)
 
 TODO:
 =====
 
-  * Live Ticker ( scheduler )
+  * Live Ticker (scheduler) - partly implemented
   * Other Plugins
   * Backwards grabbing
   * Add debugging and inspection howto
