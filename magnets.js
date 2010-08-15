@@ -29,11 +29,6 @@ process.on('SIGINT', function () {
   process.exit(0);
 });
 
-process.on('exit', function () {
-  log.info('Exited successfully ...');
-  process.exit(0);
-});
-
 /**
  * @param   {String} fileName
  * @return  {String} 
