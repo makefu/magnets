@@ -19,11 +19,6 @@ var TIMEOUT = 10000;
 
 /* Process Logging */
 
-process.on('uncaughtException', function (err) {
-  sys.puts('Caught exception: ' + err);
-  log.fatal('Caught exception: ' + err);
-});
-
 process.on('SIGINT', function () {
   log.info('Got SIGINT. Exiting ...');
   process.exit(0);
@@ -63,7 +58,7 @@ function initModules() {
 };
 
 /** 
- * runs a crawl for given module
+ * runs a live crawl for given module
  *
  * schedules a Live module
  *
@@ -71,7 +66,7 @@ function initModules() {
  */
 
 function runLiveMod(mod){
-  var img = new mag.Image(mod.LIVE)
+  var img = new mag.Content(mod.LIVE)
   mag.httpGet(img, function(content) {
     var images = mod.getImages(content);
     mag.downloadImages(images);
