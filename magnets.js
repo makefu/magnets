@@ -50,7 +50,7 @@ function initModules() {
         var name = getModuleName(file);
         log.info('Found module: ' + name);
         var module = require('./plugins/' + name);
-        modules.push(module)
+        modules.push(module);
         log.debug('Successfully loaded module: '+ module.NAME);
       });
     }
@@ -65,7 +65,7 @@ function initModules() {
  * @param    mod  the module loded by require()
  */
 
-function runLiveMod(mod){
+function runLiveMod(mod) {
   var img = new mag.Content(mod.LIVE)
   mag.httpGet(img, function(content) {
     var images = mod.getImages(content);
