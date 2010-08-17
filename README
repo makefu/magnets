@@ -1,0 +1,18 @@
+FUCKING MAGNETS HOW DO THEY WORK?
+
+"With the collapse of the dollar the government has endorsed an alternate
+currency.
+Your monetary worth is now determined by the number of funny pictures saved
+to your hard drive."
+    -- http://xkcd.com/512/
+
+TODO:
+  Live Ticker ( scheduler )
+  Other Plugins
+  Backwards grabbing
+
+
+----
+Workaround to delete downloaded html files:
+
+for i in *; do file $i; done  | grep HTML | awk '{print $1}' | sed -e 's/://' | xargs rm -v
