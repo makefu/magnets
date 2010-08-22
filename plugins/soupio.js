@@ -9,7 +9,7 @@ var MAIN="http://www.soup.io/everyone";
 exports.LIVE=  MAIN
 
 /// begin of crawling for crawling backwards
-exports.BACKWARDS = MAIN 
+exports.BACKWARDS = undefined
 exports.NAME = "Soup.io plugin"
 
 /* @brief returns all funny picture from given http-source

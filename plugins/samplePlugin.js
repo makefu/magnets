@@ -8,7 +8,7 @@ var MAIN = "http://example.org/"
 exports.LIVE=  MAIN
 
 /// begin of crawling for crawling backwards
-exports.BACKWARDS = MAIN 
+exports.BACKWARDS = undefined 
 exports.NAME = "Sample Plugin"
 
 /* @brief returns all funny picture from given http-source

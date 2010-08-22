@@ -5,9 +5,8 @@
 var MAIN = "http://9gag.com/"
 
 exports.LIVE = MAIN;
-
 /// begin of crawling for crawling backwards
-exports.BACKWARDS = MAIN;
+exports.BACKWARDS = undefined;
 exports.NAME = "9gag Plugin"
 
 /* returns all funny pictures from 9gag frontpage
