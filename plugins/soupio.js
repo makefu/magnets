@@ -8,7 +8,8 @@ var mag = require('../lib/magnetlib'),
 var log = new logger.Logger({
   logfile: "./log/magnets.log",
   loglevel: "debug",
-  logstdout: true
+  logstdout: true,
+  color: true
 });
 
 var MAIN="http://www.soup.io/everyone";

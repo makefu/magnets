@@ -19,7 +19,8 @@ var TIMEOUT = DEFAULT_TIMEOUT = 10000;
 var log = new logger.Logger({
   logfile: "./log/magnets.log",
   loglevel: "debug",
-  logstdout: true
+  logstdout: true,
+  color: true
 });
 
 
