@@ -18,6 +18,7 @@ Used node.js libraries:
   * [http://github.com/bentomas/trollopjs](Trollopjs for commandline parsing)
   * [http://github.com/andrewvc/node-streamlogger](Node-Streamlogger for logging)
   * [http://github.com/tautologistics/node-htmlparser](Node-Htmlparser for logging)
+  * [http://github.com/pfleidi/colored.js](Colerful VT100 output)
 
 TODO:
 =====
@@ -27,6 +28,7 @@ TODO:
   * Backwards grabbing
   * Add debugging and inspection howto
   * Support commandline options like loglevel 
+  * Use node-htmlparser instead of own regex
 
 
 Workaround to delete downloaded html files:
