@@ -12,9 +12,16 @@
 var mag = require('./lib/magnetlib'),
   fs = require('fs'),
   sys = require('sys');
-var log = mag.log;
+
 var modules = [];
 var TIMEOUT = DEFAULT_TIMEOUT = 10000;
+
+var log = new logger.Logger({
+  logfile: "./log/magnets.log",
+  loglevel: "debug",
+  logstdout: true
+});
+
 
 /* Process Logging */
 
@@ -84,7 +91,7 @@ function runLiveMod(mod) {
 function runLiveModules() {
   log.info("Running live modules");
   var currTimeout = 0;
-  
+
   modules.forEach(function(mod) {
     log.debug("starting module: " + mod.NAME + " at Timeout " + currTimeout);
     setTimeout(function () { runLiveMod(mod) }, currTimeout); 
@@ -93,48 +100,48 @@ function runLiveModules() {
 
   setTimeout(runLiveModules, currTimeout); 
 }
+
 var curr_timeout = DEFAULT_TIMEOUT; // TODO unGlobalize me
 function runBackMod(mod,cUrl) {
-    if (cUrl == undefined) 
-    {
-        log.info(mod.NAME+' cannot be crawled backwards or is disable')
-        return;
-    }
-    log.info('backwards crawling '+cUrl);
-    var cont = new mag.Content(cUrl);
-    mag.httpGet(cont,function(ret) {
-        var mUrl = mod.getNextUrl(ret);
-        var imgs = mod.getImages(ret) ;
+  if (cUrl == undefined) 
+  {
+    log.info(mod.NAME+' cannot be crawled backwards or is disable')
+    return;
+  }
+  log.info('backwards crawling '+cUrl);
+  var cont = new mag.Content(cUrl);
+  mag.httpGet(cont,function(ret) {
+    var mUrl = mod.getNextUrl(ret);
+    var imgs = mod.getImages(ret) ;
 
-        if ( imgs.length == 0 ) {
-          curr_timeout = curr_timeout /2 ;
-        } else {
-          curr_timeout = DEFAULT_TIMEOUT;
-          mag.downloadImages(imgs);
-        }
-        if ( mUrl != undefined ) {
-          setTimeout( function () {runBackMod(mod,mUrl) },curr_timeout); 
-        }else
-        {
-            log.warn(cUrl + ' End of page?');
-        }
-    });
+    if (imgs.length == 0) {
+      curr_timeout = curr_timeout /2 ;
+    } else {
+      curr_timeout = DEFAULT_TIMEOUT;
+      mag.downloadImages(imgs);
+    }
+    if (mUrl != undefined) {
+    setTimeout( function () {runBackMod(mod,mUrl) },curr_timeout); 
+  } else {
+    log.warn(cUrl + ' End of page?');
+  }
+});
 }
-function runBackwardsModules()
-{
-    log.info("Running Backwards-in-Time modules");
-    var currTimeout = 0;
-    modules.forEach(function(mod) {
-        log.debug("starting module: " + mod.BACKWARDS + " at Timeout " + currTimeout);
+
+function runBackwardsModules() {
+  log.info("Running Backwards-in-Time modules");
+  var currTimeout = 0;
+  modules.forEach(function(mod) {
+    log.debug("starting module: " + mod.BACKWARDS + " at Timeout " + currTimeout);
     setTimeout(function () { runBackMod(mod,mod.BACKWARDS) }, currTimeout); 
     currTimeout = currTimeout + TIMEOUT;
-    });
+  });
 
 }
 function main() {
   initModules();
-  //runLiveModules(); TODO conditional for running live
-  //runBackwardsModules(); TODO needs to have modules intialized before
+  runLiveModules(); //TODO conditional for running live
+  //runBackwardsModules(); //TODO needs to have modules intialized before
 }
 
 main();
