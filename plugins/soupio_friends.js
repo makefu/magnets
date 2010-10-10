@@ -7,8 +7,11 @@ var mag = require('../lib/magnetlib'),
 
 //var MAIN="http://roothausen.soup.io/friends";
 
-// automate this!
-var SESSION_ID='some 64 byte hash'
+// currently via wget http://USERNAME.soup.io/friends and watch the
+// redirect
+//
+// TODO automate this!
+var SESSION_ID='64byte hash'
 var MAIN='http://roothausen.soup.io/friends?sessid='+SESSION_ID
 exports.LIVE= MAIN
 
@@ -28,6 +31,7 @@ exports.NAME= "Soup.io Friends plugin"
  *
  * TODO think about how to collect picture urls after asynchronous http
  * requests!
+ * Step module for node might help here.
  *
  *
  * @param content of webpage
@@ -72,7 +76,7 @@ function getMatches(regex, content) {
  * @return the url string 
  */
 exports.getNextUrl = function getNextUrl(content) {
-    var urlPattern = /<a href=\"([\S]*)\" onclick=\"SOUP.Endless.getMoreBelow/
+    var urlPattern = /<a href=["']{1}([\S]*)["']{1}\sonclick=['"]{1}SOUP\.Endless\.getMore/
     var match = urlPattern.exec(content.data)
     if(match != null && match != undefined) {
         var parsedUrl = url.parse(content.url);
@@ -82,7 +86,7 @@ exports.getNextUrl = function getNextUrl(content) {
     } else {
         // this should never happen
         // means we reached the end of the soup.io
-        log.warn("Didn't find next url, assumed we reached the end of soup.io");
+        log.warn("Didn't find next url, no more pics of user? Probably the session is expired!");
         return undefined;
     }
 };

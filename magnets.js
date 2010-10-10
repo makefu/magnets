@@ -134,7 +134,7 @@ function runBackwardsModules()
 function main() {
   initModules();
   //runLiveModules(); TODO conditional for running live
-  //runBackwardsModules(); TODO needs to have modules intialized before
+  runBackwardsModules(); //TODO needs to have modules intialized before
 }
 
 main();
