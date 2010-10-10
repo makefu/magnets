@@ -5,12 +5,19 @@ var mag = require('../lib/magnetlib'),
     sys = require('sys'),
     url = require('url');
 
+var log = new logger.Logger({
+  logfile: "./log/magnets.log",
+  loglevel: "debug",
+  logstdout: true,
+  color: true
+});
+
 var MAIN="http://www.soup.io/everyone";
-exports.LIVE=  MAIN
+exports.LIVE =  MAIN;
 
 /// begin of crawling for crawling backwards
-exports.BACKWARDS = undefined
-exports.NAME = "Soup.io plugin"
+exports.BACKWARDS = undefined;
+exports.NAME = "Soup.io plugin";
 
 /* @brief returns all funny picture from given http-source
  *
@@ -28,7 +35,8 @@ exports.NAME = "Soup.io plugin"
  *
  * @param content of webpage
  * @return array of urls
- */
+ */ 
+
 exports.getImages = function getImages(content) { 
   content = content.data;
   var imageFilter = /<img .* src=['"]{1}([\S]*)['"]{1}\s?(.*)\/>/g;
@@ -39,7 +47,7 @@ exports.getImages = function getImages(content) {
   while (match = imageFilter.exec(content)) {
     if(match != null && match != undefined) {
       if( ! match[0].match(/-square/)) {
-        log.debug("found: "+ match[0])
+        log.debug("found: "+ match[0]);
         images.push(match[1]);
       }
     }

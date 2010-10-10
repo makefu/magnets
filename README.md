@@ -15,9 +15,10 @@ The name was borrowed from [the 'fucking magnets' meme](http://knowyourmeme.com/
 Used node.js libraries:
 =======================
   
-  * [http://github.com/bentomas/trollopjs](Trollopjs for commandline parsing)
-  * [http://github.com/andrewvc/node-streamlogger](Node-Streamlogger for logging)
-  * [http://github.com/tautologistics/node-htmlparser](Node-Htmlparser for logging)
+  * [Trollopjs for commandline parsing](http://github.com/bentomas/trollopjs)
+  * [Node-Streamlogger for logging](http://github.com/andrewvc/node-streamlogger)
+  * [Node-Htmlparser for logging](http://github.com/tautologistics/node-htmlparser)
+  * [Colored.js for colored VT100 output](http://github.com/pfleidi/colored.js)
 
 TODO:
 =====
@@ -27,6 +28,7 @@ TODO:
   * Backwards grabbing
   * Add debugging and inspection howto
   * Support commandline options like loglevel 
+  * Use node-htmlparser instead of own regex
 
 
 Workaround to delete downloaded html files:
