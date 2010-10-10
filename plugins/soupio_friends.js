@@ -5,6 +5,13 @@ var mag = require('../lib/magnetlib'),
     sys = require('sys'),
     url = require('url');
 
+var log = new logger.Logger({
+  logfile: "./log/magnets.log",
+  loglevel: "debug",
+  logstdout: true,
+  color: true
+});
+
 //var MAIN="http://roothausen.soup.io/friends";
 
 // currently via wget http://USERNAME.soup.io/friends and watch the
@@ -16,7 +23,7 @@ var MAIN='http://roothausen.soup.io/friends?sessid='+SESSION_ID
 exports.LIVE= MAIN
 
 /// begin of crawling for crawling backwards
-exports.BACKWARDS = MAIN 
+exports.BACKWARDS = undefined
 exports.NAME= "Soup.io Friends plugin"
 
 /* @brief returns all funny picture from given http-source
