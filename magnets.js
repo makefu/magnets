@@ -15,7 +15,8 @@ sys = require('sys');
 
 var modules = [];
 var MODULE_FOLDER = "./plugins/";
-var TIMEOUT = DEFAULT_TIMEOUT = 10000;
+var DEFAULT_TIMEOUT = 10000;
+var TIMEOUT = DEFAULT_TIMEOUT;
 
 var log = new logger.Logger({
   logfile: "./log/magnets.log",
