@@ -9,9 +9,10 @@
  *
  */
 
-var mag = require('./lib/magnetlib'),
-fs = require('fs'),
-sys = require('sys');
+var Mag = require('./lib/magnetlib'),
+Fs = require('fs'),
+   Sys = require('sys'),
+    Url = require('url');
 
 var modules = [];
 var MODULE_FOLDER = "./plugins/";
@@ -49,14 +50,14 @@ function getModuleName(fileName) {
 
 function initModules() {
   modules = [];
-  fs.readdir(MODULE_FOLDER, function(err, files) {
+  Fs.readdir(MODULE_FOLDER, function(err, files) {
     if (err) {
       log.warn('Error while reading files: ' + err);
     } else {
       files.forEach(function(file) {
         var name = getModuleName(file);
         log.info('Found module: ' + name);
-        var module = require(MODULE_FOLDER + name);
+        var module = require(MODULE_FOLDER + name).createPlugin(log);
         modules.push(module);
         log.debug('Successfully loaded module: '+ module.NAME);
         log.info('Starting Backwards Crawling for ' + module.NAME);
@@ -75,10 +76,10 @@ function initModules() {
  */
 
 function runLiveMod(mod) {
-  var img = new mag.Content(mod.LIVE)
-  mag.httpGet(img, function(content) {
+  var img = new Mag.Content(mod.LIVE)
+  Mag.httpGet(img, function(content) {
     var images = mod.getImages(content);
-    mag.downloadImages(images);
+    Mag.downloadImages(images);
   });
 }
 
@@ -110,21 +111,24 @@ function runBackMod(mod,cUrl) {
   }
 
   log.info('backwards crawling '+cUrl);
-  var cont = new mag.Content(cUrl);
-  mag.httpGet(cont,function(ret) {
-    var mUrl = mod.getNextUrl(ret);
+  var cont = new Mag.Content(cUrl);
+  Mag.httpGet(cont,function(ret) {
+    var mUrl = mod.getNextUrl(ret)[1];
     var imgs = mod.getImages(ret);
+    log.debug(Sys.inspect(imgs));
 
     if (imgs.length == 0) {
       curr_timeout = curr_timeout/2;
     } else {
       curr_timeout = DEFAULT_TIMEOUT;
-      mag.downloadImages(imgs);
+      log.debug(imgs)
+      Mag.downloadImages(imgs);
     }
     if (mUrl != undefined) {
+      log.debug("next url is: "+ mUrl);
       setTimeout( function () { runBackMod(mod, mUrl) }, curr_timeout); 
     } else {
-      log.warn(cUrl + ' End of page?');
+      log.warn(mod.NAME + ' End of page?');
     }
   });
 }
