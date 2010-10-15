@@ -15,7 +15,7 @@ Fs = require('fs'),
     Url = require('url');
 
 var modules = [];
-var MODULE_FOLDER = "./plugins/";
+var PLUGIN_FOLDER = "./plugins/";
 var DEFAULT_TIMEOUT = 10000;
 var TIMEOUT = DEFAULT_TIMEOUT;
 
@@ -39,31 +39,33 @@ process.on('SIGINT', function () {
  * @return  {String} 
  */
 
-function getModuleName(fileName) {
+function getPluginName(fileName) {
   return fileName.split('\.')[0];
 }
 
 /**
- * Scans the MODULE_FOLDER directory for modules
+ * Scans the PLUGIN_FOLDER directory for modules
  *
  * all modules are stored inside modules
  */
 
 function initModules() {
   modules = [];
-  Fs.readdir(MODULE_FOLDER, function(err, files) {
+  Fs.readdir(PLUGIN_FOLDER, function(err, files) {
     if (err) {
       log.warn('Error while reading files: ' + err);
     } else {
       files.forEach(function(file) {
-        var name = getModuleName(file);
-        log.info('Found module: ' + name);
-        var module = require(MODULE_FOLDER + name).createPlugin(log);
-        modules.push(module);
-        log.debug('Successfully loaded module: '+ module.NAME);
-        log.info('Starting Backwards Crawling for ' + module.NAME);
-        runBackMod(module, module.BACKWARDS);
+        var name = getPluginName(file);
+        log.info('Found plugin: ' + name);
+        var mods = require(PLUGIN_FOLDER + name).createPlugin(log);
+        mods.forEach( function (module) {
+            modules.push(module);
+            log.debug('Successfully loaded module: '+ module.NAME + ' from Plugin ' + name);
+        });
+        //runBackMod(module, module.BACKWARDS);
       });
+      runBackwardsModules(); //TODO needs to have modules intialized before
     }
   });
 };
@@ -139,6 +141,11 @@ function runBackwardsModules() {
   var currTimeout = 0;
 
   modules.forEach(function(mod) {
+    if ( mod.BACKWARDS  == undefined)
+    {
+      log.info('Skipping '+ mod.NAME +' because backwards crawling is disabled ')
+      return;
+    }
     log.debug("starting module: " + mod.BACKWARDS + " at Timeout " + currTimeout);
     setTimeout(function () { runBackMod(mod,mod.BACKWARDS) }, currTimeout); 
     currTimeout = currTimeout + TIMEOUT;
@@ -149,7 +156,6 @@ function runBackwardsModules() {
 function main() {
   initModules();
   //runLiveModules(); TODO conditional for running live
-  runBackwardsModules(); //TODO needs to have modules intialized before
 }
 
 main();

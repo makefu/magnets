@@ -18,5 +18,5 @@ exports.createPlugin = function (log) {
         return  urlPattern.exec(content.data);
     };
 
-    return out;
+    return [out];
 };

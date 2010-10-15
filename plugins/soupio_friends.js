@@ -23,7 +23,7 @@ exports.createPlugin = function (log) {
         while (match = imageFilter.exec(content.data)) {
             if(match != null && match != undefined) {
                 if( ! match[0].match(/-square/)) {
-                    log.debug("found: "+ match[0]);
+                    //log.debug("found: "+ match[1]);
                     images.push(match[1]);
                 }
             }
@@ -38,5 +38,5 @@ exports.createPlugin = function (log) {
         var front =parsedUrl.protocol+'//'+parsedUrl.host+match[1]
         return [0,front+match[1]]
     };
-    return out;
+    return [out];
 };

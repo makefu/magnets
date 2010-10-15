@@ -42,5 +42,5 @@ exports.createPlugin = function (log) {
         var urlPattern = /regex to find the next url/
         return urlPattern.exec(content.data);
     };
-    return out;
+    return [out];
 };
