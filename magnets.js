@@ -21,7 +21,7 @@ var TIMEOUT = DEFAULT_TIMEOUT;
 
 var log = new logger.Logger({
     logfile: "./log/magnets.log",
-    loglevel: "debug",
+    loglevel: "info",
     logstdout: true,
     color: true
 });
@@ -116,17 +116,18 @@ function runBackMod(mod,cUrl) {
     log.info('backwards crawling '+cUrl);
     var cont = new Mag.Content(cUrl);
     Mag.httpGet(cont,function(ret) {
-        var mUrl = mod.getNextUrl(ret)[1];
+        var mUrl = mod.getNextUrl(ret);
         var imgs = mod.getImages(ret);
 
         if (imgs.length == 0) {
             curr_timeout = curr_timeout/2;
+            log.warn(mUrl[1] + ' no images on page?')
         } else {
             curr_timeout = DEFAULT_TIMEOUT;
-            log.debug(imgs)
-        Mag.downloadImages(imgs);
+            Mag.downloadImages(imgs);
         }
-        if (mUrl != undefined) {
+        if (mUrl != undefined ) {
+            mUrl = mUrl[1];
             log.debug("next url is: "+ mUrl);
             setTimeout( function () { runBackMod(mod, mUrl) }, curr_timeout); 
         } else {

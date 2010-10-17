@@ -1,37 +1,37 @@
-var Mag = require('../lib/magnetlib'),
+
+    Parse = require('htmlparser'),
+    Select = require('soupselect').select,
+    Url = require('url'),
     Sys = require('sys');
 var urls = [
-    //'http://icanhascheezburger.com/',
-    //'http://squee.icanhascheezburger.com/',
-    //'http://objects.icanhascheezburger.com/',
+    'http://history.icanhascheezburger.com/',
+    'http://thereifixedit.failblog.org/page/30/',
+    'http://icanhascheezburger.com/',
+    'http://squee.icanhascheezburger.com/',
+    'http://objects.icanhascheezburger.com/',
     'http://noms.icanhascheezburger.com/',
-    //'http://totallylookslike.icanhascheezburger.com/',
-    //'http://ifshoescouldkill.com/',
-    'http://punditkitchen.com/',
-    'http://ihasahotdog.com/',
-    'http://actinglikeanimals.com/',
-    'http://historiclols.cheezburger.com/',
-    'http://epicute.com/',
-    'http://roflrazzi.com/',
-    'http://musthavecute.com/',
-    'http://itmademyday.com/',
-    'http://lovelylisting.com/',
-    'http://wedinator.com/',
-    'http://totsandgiggles.cheezburger.com/',
-    'http://ifshoescouldkill.com/',
-    'http://thereifixedit.failblog.org/',
-    'http://learnfrommyfail.failblog.org/',
-    'http://ugliesttattoos.com/',
-    'http://upnextinsports.com/',
-    'http://oddlyspecific.com/',
+    'http://totallylookslike.icanhascheezburger.com/',
+    'http://news.icanhascheezburger.com/',
+    'http://dogs.icanhascheezburger.com/',
+    'http://animals.icanhascheezburger.com/',
+    'http://epicute.icanhascheezburger.com/',
+    'http://celebs.icanhascheezburger.com/',
+    'http://stuff.icanhascheezburger.com/',
+    //'http://immd.icanhascheezburger.com/',
+    //'http://lovelylisting.icanhascheezburger.com/',
+    //'http://wedinator.icanhascheezburger.com/',
+    //'http://babies.icanhascheezburger.com/',
+    //'http://learnfrommyfail.failblog.org/',
+    'http://ugliesttattoos.failblog.org/',
+    'http://sports.failblog.org/',
+    'http://oddlyspecific.failblog.org/',
+    'http://work.failblog.org/',
+    'http://win.failblog.org/',
     'http://verydemotivational.com/',
     'http://failbook.failblog.org/',
-    'http://poorlydressed.com/',
+    'http://poorlydressed.failblog.org/',
     'http://engrishfunny.failblog.org/',
-    'http://mthruf.com/',
-    'http://crazythingsparentssay.failblog.org/',
-    'http://friendsofirony.com/',
-    'http://hackedirl.com/',
+    //'http://crazythingsparentssay.failblog.org/', does not compute
     'http://senorgif.com/',
     'http://comixed.com/',
     'http://artoftrolling.com/',
@@ -39,9 +39,9 @@ var urls = [
     'http://graphjam.com/',
     'http://pictureisunrelated.com/',
     'http://derp.cheezburger.com/',
-    'http://thedailywh.at/',
+    // 'http://thedailywh.at/', does not work for shit!
     'http://epicwinftw.com/',
-    'http://hawtness.com/'
+    'http://women.hawtness.com/'
     ];
 exports.createPlugin = function (log)
 {
@@ -61,15 +61,49 @@ function genPlugin(log,url) {
 
 
     out.getImages = function getImages(content) { 
-      var imageFilter = /<img[ ]*([ ]*src=["'](\S+)["']|[ ]*alt=["'][\S ]+?["']|[ ]*title=["'][\S ]+?['"]){3}[ ]*>/g
-      images = Mag.getMatches(imageFilter, content.data);
-      return images;
+        var images =[];
+        var handler = new Parse.DefaultHandler(function(err,dom) {
+            //log.debug(Sys.inspect(dom))
+            if (err) {
+                log.warn("Error: " + err);
+            } else {
+                ret = Select(dom, 'div[class=entry] img[title]');
+                try
+                {
+                    ret.forEach(function (image){
+                        images.push(Url.resolve(content.url,image.attribs['src']));
+                    });
+                }catch (err) {
+                    log.warn("problem with" + content.url + " " + image.attribs['src']);
+                    log.warn(err);
+                }
+            }
+        });
+        var parser = new Parse.Parser(handler);
+        parser.parseComplete(content.data);
+        log.debug(Sys.inspect(images))
+        return images;
     };
 
     out.getNextUrl = function getNextUrl(content) {
-        var urlPattern = /<a href=['"](\S+?)['"][ ]?>Next/
-        ret = urlPattern.exec(content.data)
-        return ret;
+        var pattern = /^Next/;
+        var nextUrl = null;
+        var handler = new Parse.DefaultHandler(function(err,dom) {
+            if (err) {
+                log.warn("Error: " + err);
+            } else {
+                ret = Select(dom, 'a[href]');
+                ret.forEach(function (link){
+                    //log.warn(Sys.inspect(link))
+                    if ( link.children && pattern.test(link.children[0].data) ) {
+                        nextUrl = Url.resolve(content.url,link.attribs['href']);
+                    }
+                });
+            }
+        });
+        var parser = new Parse.Parser(handler);
+        parser.parseComplete(content.data);
+        return [nextUrl,nextUrl];
     };
 
     return out;
