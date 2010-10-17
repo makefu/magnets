@@ -9,27 +9,29 @@
  *
  */
 
-var mag = require('./lib/magnetlib'),
-fs = require('fs'),
-sys = require('sys');
+var Mag = require('./lib/magnetlib'),
+    Fs = require('fs'),
+    Sys = require('sys'),
+    Url = require('url');
 
 var modules = [];
-var MODULE_FOLDER = "./plugins/";
-var TIMEOUT = DEFAULT_TIMEOUT = 10000;
+var PLUGIN_FOLDER = "./plugins/";
+var DEFAULT_TIMEOUT = 10000;
+var TIMEOUT = DEFAULT_TIMEOUT;
 
 var log = new logger.Logger({
-  logfile: "./log/magnets.log",
-  loglevel: "debug",
-  logstdout: true,
-  color: true
+    logfile: "./log/magnets.log",
+    loglevel: "info",
+    logstdout: true,
+    color: true
 });
 
 
 /* Process Logging */
 
 process.on('SIGINT', function () {
-  log.info('Got SIGINT. Exiting ...');
-  process.exit(0);
+    log.info('Got SIGINT. Exiting ...');
+    process.exit(0);
 });
 
 /**
@@ -37,33 +39,35 @@ process.on('SIGINT', function () {
  * @return  {String} 
  */
 
-function getModuleName(fileName) {
-  return fileName.split('\.')[0];
+function getPluginName(fileName) {
+    return fileName.split('\.')[0];
 }
 
 /**
- * Scans the MODULE_FOLDER directory for modules
+ * Scans the PLUGIN_FOLDER directory for modules
  *
  * all modules are stored inside modules
  */
 
 function initModules() {
-  modules = [];
-  fs.readdir(MODULE_FOLDER, function(err, files) {
-    if (err) {
-      log.warn('Error while reading files: ' + err);
-    } else {
-      files.forEach(function(file) {
-        var name = getModuleName(file);
-        log.info('Found module: ' + name);
-        var module = require(MODULE_FOLDER + name);
-        modules.push(module);
-        log.debug('Successfully loaded module: '+ module.NAME);
-        log.info('Starting Backwards Crawling for ' + module.NAME);
-        runBackMod(module, module.BACKWARDS);
-      });
-    }
-  });
+    modules = [];
+    Fs.readdir(PLUGIN_FOLDER, function(err, files) {
+        if (err) {
+            log.warn('Error while reading files: ' + err);
+        } else {
+            files.forEach(function(file) {
+                var name = getPluginName(file);
+                log.info('Found plugin: ' + name);
+                var mods = require(PLUGIN_FOLDER + name).createPlugin(log);
+                mods.forEach( function (module) {
+                    modules.push(module);
+                    log.debug('Successfully loaded module: '+ module.NAME + ' from Plugin ' + name);
+                });
+                //runBackMod(module, module.BACKWARDS);
+            });
+            runBackwardsModules(); //TODO needs to have modules intialized before
+        }
+    });
 };
 
 /** 
@@ -75,11 +79,11 @@ function initModules() {
  */
 
 function runLiveMod(mod) {
-  var img = new mag.Content(mod.LIVE)
-  mag.httpGet(img, function(content) {
-    var images = mod.getImages(content);
-    mag.downloadImages(images);
-  });
+    var img = new Mag.Content(mod.LIVE)
+        Mag.httpGet(img, function(content) {
+            var images = mod.getImages(content);
+            Mag.downloadImages(images);
+        });
 }
 
 /**
@@ -90,61 +94,68 @@ function runLiveMod(mod) {
  */
 
 function runLiveModules() {
-  log.info("Running live modules");
-  var currTimeout = 0;
+    log.info("Running live modules");
+    var currTimeout = 0;
 
-  modules.forEach(function(mod) {
-    log.debug("starting module: " + mod.NAME + " at Timeout " + currTimeout);
-    setTimeout(function () { runLiveMod(mod) }, currTimeout); 
-    currTimeout = currTimeout + TIMEOUT;
-  });
+    modules.forEach(function(mod) {
+        log.debug("starting module: " + mod.NAME + " at Timeout " + currTimeout);
+        setTimeout(function () { runLiveMod(mod) }, currTimeout); 
+        currTimeout = currTimeout + TIMEOUT;
+    });
 
-  setTimeout(runLiveModules, currTimeout); 
+    setTimeout(runLiveModules, currTimeout); 
 }
 
 var curr_timeout = DEFAULT_TIMEOUT; // TODO unGlobalize me
 function runBackMod(mod,cUrl) {
-  if (cUrl == undefined) {
-    log.info(mod.NAME + ' cannot be crawled backwards or is disable')
-    return;
-  }
-
-  log.info('backwards crawling '+cUrl);
-  var cont = new mag.Content(cUrl);
-  mag.httpGet(cont,function(ret) {
-    var mUrl = mod.getNextUrl(ret);
-    var imgs = mod.getImages(ret);
-
-    if (imgs.length == 0) {
-      curr_timeout = curr_timeout/2;
-    } else {
-      curr_timeout = DEFAULT_TIMEOUT;
-      mag.downloadImages(imgs);
+    if (cUrl == undefined) {
+        log.info(mod.NAME + ' cannot be crawled backwards or is disable')
+            return;
     }
-    if (mUrl != undefined) {
-      setTimeout( function () { runBackMod(mod, mUrl) }, curr_timeout); 
-    } else {
-      log.warn(cUrl + ' End of page?');
-    }
-  });
+
+    log.info('backwards crawling '+cUrl);
+    var cont = new Mag.Content(cUrl);
+    Mag.httpGet(cont,function(ret) {
+        var mUrl = mod.getNextUrl(ret);
+        var imgs = mod.getImages(ret);
+
+        if (imgs.length == 0) {
+            curr_timeout = curr_timeout/2;
+            log.warn(mUrl[1] + ' no images on page?')
+        } else {
+            curr_timeout = DEFAULT_TIMEOUT;
+            Mag.downloadImages(imgs);
+        }
+        if (mUrl != undefined ) {
+            mUrl = mUrl[1];
+            log.debug("next url is: "+ mUrl);
+            setTimeout( function () { runBackMod(mod, mUrl) }, curr_timeout); 
+        } else {
+            log.warn(mod.NAME + ' End of page?');
+        }
+    });
 }
 
 function runBackwardsModules() {
-  log.info("Running Backwards-in-Time modules");
-  var currTimeout = 0;
+    log.info("Running Backwards-in-Time modules");
+    var currTimeout = 0;
 
-  modules.forEach(function(mod) {
+    modules.forEach(function(mod) {
+        if ( mod.BACKWARDS  == undefined)
+    {
+        log.info('Skipping '+ mod.NAME +' because backwards crawling is disabled ')
+        return;
+    }
     log.debug("starting module: " + mod.BACKWARDS + " at Timeout " + currTimeout);
     setTimeout(function () { runBackMod(mod,mod.BACKWARDS) }, currTimeout); 
     currTimeout = currTimeout + TIMEOUT;
-  });
+    });
 
 }
 
 function main() {
-  initModules();
-  runLiveModules(); //TODO conditional for running live
-  //runBackwardsModules(); //TODO needs to have modules intialized before
+    initModules();
+    //runLiveModules(); TODO conditional for running live
 }
 
 main();
