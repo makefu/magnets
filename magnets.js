@@ -56,14 +56,16 @@ function initModules() {
             log.warn('Error while reading files: ' + err);
         } else {
             files.forEach(function(file) {
-                var name = getPluginName(file);
-                log.info('Found plugin: ' + name);
-                var mods = require(PLUGIN_FOLDER + name).createPlugin(log);
-                mods.forEach( function (module) {
+                if (/\.js$/.test(file)) {
+                  var name = getPluginName(file);
+                  log.info('Found plugin: ' + name);
+                  var mods = require(PLUGIN_FOLDER + name).createPlugin(log);
+                  mods.forEach( function (module) {
                     modules.push(module);
                     log.debug('Successfully loaded module: '+ module.NAME + ' from Plugin ' + name);
-                });
-                //runBackMod(module, module.BACKWARDS);
+                  });
+                  //runBackMod(module, module.BACKWARDS);
+                }
             });
             runBackwardsModules(); //TODO needs to have modules intialized before
         }
