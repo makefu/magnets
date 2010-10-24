@@ -70,11 +70,12 @@ function genPlugin(log,url) {
                 ret = Select(dom, 'div[class=entry] img[title]');
                 try
                 {
-                    ret.forEach(function (image){
-                        images.push(Url.resolve(content.url,image.attribs['src']));
-                    });
+                        ret.forEach(function (image){
+                            images.push(Url.resolve(content.url,image.attribs['src']));
+                        });
                 }catch (err) {
-                    log.warn("problem with" + content.url + " " + image.attribs['src']);
+
+                    log.warn("problem with" + content.url +" "+Sys.inspect(ret));
                     log.warn(err);
                 }
             }
