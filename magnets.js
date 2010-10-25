@@ -21,7 +21,7 @@ LOGFILE = __dirname + '/log/mediengewitter.log',
 DEFAULT_TIMEOUT = 10000,
 TIMEOUT = DEFAULT_TIMEOUT;
 
-Log4js.addAppender(Appender.consoleAppender());
+//Log4js.addAppender(Appender.consoleAppender());
 Log4js.addAppender(Log4js.fileAppender(LOGFILE), 'magnets');
 
 var log = Log4js.getLogger('magnets');

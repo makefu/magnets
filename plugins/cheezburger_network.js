@@ -4,7 +4,7 @@
     Url = require('url'),
     Sys = require('sys');
 var urls = [
-    'http://history.icanhascheezburger.com/',
+    //'http://history.icanhascheezburger.com/',
     'http://thereifixedit.failblog.org/page/30/',
     'http://icanhascheezburger.com/',
     'http://squee.icanhascheezburger.com/',
@@ -23,7 +23,7 @@ var urls = [
     //'http://babies.icanhascheezburger.com/',
     //'http://learnfrommyfail.failblog.org/',
     'http://ugliesttattoos.failblog.org/',
-    'http://sports.failblog.org/',
+    //'http://sports.failblog.org/',
     'http://oddlyspecific.failblog.org/',
     'http://work.failblog.org/',
     'http://win.failblog.org/',
@@ -68,8 +68,7 @@ function genPlugin(log,url) {
                 log.warn("Error: " + err);
             } else {
                 ret = Select(dom, 'div[class=entry] img[title]');
-                try
-                {
+                try {
                         ret.forEach(function (image){
                             images.push(Url.resolve(content.url,image.attribs['src']));
                         });
@@ -82,7 +81,6 @@ function genPlugin(log,url) {
         });
         var parser = new Parse.Parser(handler);
         parser.parseComplete(content.data);
-        log.debug(Sys.inspect(images))
         return images;
     };
 
