@@ -17,7 +17,7 @@ Appender = require('./lib/colorappender.js');
 
 var modules = [],
 PLUGIN_FOLDER = __dirname + "/plugins/",
-LOGFILE = __dirname + '/log/mediengewitter.log',
+LOGFILE = __dirname + '/log/magnets.log',
 DEFAULT_TIMEOUT = 10000,
 TIMEOUT = DEFAULT_TIMEOUT;
 
@@ -25,7 +25,7 @@ Log4js.addAppender(Appender.consoleAppender());
 Log4js.addAppender(Log4js.fileAppender(LOGFILE), 'magnets');
 
 var log = Log4js.getLogger('magnets');
-log.setLevel('INFO');
+log.setLevel('ERROR');
 
 /* Process Logging */
 
@@ -33,6 +33,11 @@ process.on('SIGINT', function () {
     log.info('Got SIGINT. Exiting ...');
     process.exit(0);
   });
+
+process.on('uncaughtException', function(err) {
+    log.fatal('RUNTIME ERROR! :' + err.stack);
+});
+
 
 /**
  * @param   {String} fileName
