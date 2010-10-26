@@ -43,12 +43,12 @@ Used node.js libraries:
   * [Node-Htmlparser for Screen Scraping](http://github.com/tautologistics/node-htmlparser)
   * [soupselect for CSS selectors after HTML-parsing](http://github.com/harryf/node-soupselect.git)
   * [Coloredjs for colored VT100 output](http://github.com/pfleidi/colored.js)
+  * [node-wwwdude for http-connections](http://github.com/pfleidi/node-wwwdude.git)
 
 in short:
-npm install trollop htmlparser soupselect
-
+npm install trollop htmlparser soupselect http://github.com/pfleidi/node-wwwdude/tarball/master 
 
 Workaround to delete downloaded html files:
 ===========================================
-
-        for i in *; do file $i; done  | grep HTML | awk '{print $1}' | sed -e 's/://' | xargs rm -v
+This is not necessary  as wwwdude supports redirects!
+For historic reasons -> $ for i in *; do file $i; done  | grep HTML | awk '{print $1}' | sed -e 's/://' | xargs rm -v
