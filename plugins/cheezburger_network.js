@@ -5,7 +5,7 @@
     Sys = require('sys');
 var urls = [
     //'http://history.icanhascheezburger.com/',
-    'http://thereifixedit.failblog.org/page/30/',
+    'http://thereifixedit.failblog.org/',
     'http://icanhascheezburger.com/',
     'http://squee.icanhascheezburger.com/',
     'http://objects.icanhascheezburger.com/',
@@ -28,7 +28,7 @@ var urls = [
     'http://work.failblog.org/',
     'http://win.failblog.org/',
     'http://verydemotivational.com/',
-    'http://failbook.failblog.org/',
+    //'http://failbook.failblog.org/',
     'http://poorlydressed.failblog.org/',
     'http://engrishfunny.failblog.org/',
     //'http://crazythingsparentssay.failblog.org/', does not compute
