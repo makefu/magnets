@@ -9,7 +9,6 @@
  *
  */
 
-var Mag = require('./lib/magnetlib'),
 Fs = require('fs'),
 Sys = require('sys'),
 Log4js = require('log4js'),
@@ -21,11 +20,12 @@ LOGFILE = __dirname + '/log/magnets.log',
 DEFAULT_TIMEOUT = 10000,
 TIMEOUT = DEFAULT_TIMEOUT;
 
-//Log4js.addAppender(Appender.consoleAppender());
-Log4js.addAppender(Log4js.fileAppender(LOGFILE), 'magnets');
+Log4js.addAppender(Appender.consoleAppender());
+//Log4js.addAppender(Log4js.fileAppender(LOGFILE), 'magnets');
 
 var log = Log4js.getLogger('magnets');
-log.setLevel('ERROR');
+log.setLevel('DEBUG');
+var mag = require('./lib/magnetlib').createMaglib({imageFolder : __dirname + '/newimg/', log:log});
 
 /* Process Logging */
 
@@ -58,8 +58,7 @@ function runBackMod(mod, cUrl) {
     return;
   }
 
-  var cont = new Mag.Content(cUrl);
-  Mag.httpGet(cont, function (ret) {
+  mag.httpGet(cUrl, function (ret) {
       var mUrl = mod.getNextUrl(ret),
       imgs = mod.getImages(ret);
 
@@ -68,7 +67,7 @@ function runBackMod(mod, cUrl) {
         log.warn(mUrl[1] + ' no images on page?');
       } else {
         curr_timeout = DEFAULT_TIMEOUT;
-        Mag.downloadImages(imgs);
+        mag.downloadImages(imgs);
       }
 
       if (mUrl) {
@@ -144,11 +143,10 @@ function initModules() {
  */
 
 function runLiveMod(mod) {
-  var img = new Mag.Content(mod.LIVE);
 
-  Mag.httpGet(img, function (content) {
+  Mag.httpGet(mod.LIVE, function (content) {
       var images = mod.getImages(content);
-      Mag.downloadImages(images);
+      mag.downloadImages(images);
     });
 }
 
