@@ -1,6 +1,6 @@
 /**
  * This is the main scheduler for magnets.js
- * 
+ *
  * It's main purpose is to manage and schedule
  * modules for different websites
  *
@@ -9,7 +9,7 @@
  *
  */
 
-Fs = require('fs'),
+var Fs = require('fs'),
 Sys = require('sys'),
 Log4js = require('log4js'),
 Appender = require('./lib/colorappender.js');
@@ -25,7 +25,11 @@ Log4js.addAppender(Appender.consoleAppender());
 
 var log = Log4js.getLogger('magnets');
 log.setLevel('DEBUG');
-var mag = require('./lib/magnetlib').createMaglib({imageFolder : __dirname + '/newimg/', log:log});
+
+var mag = require('./lib/magnetlib').createMaglib({
+    imageFolder : __dirname + '/images/',
+    log: log
+  });
 
 /* Process Logging */
 
@@ -34,14 +38,13 @@ process.on('SIGINT', function () {
     process.exit(0);
   });
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
     log.fatal('RUNTIME ERROR! :' + err.stack);
-});
-
+  });
 
 /**
  * @param   {String} fileName
- * @return  {String} 
+ * @return  {String}
  */
 
 function getPluginName(fileName) {
@@ -75,14 +78,12 @@ function runBackMod(mod, cUrl) {
         log.debug("Next url is: " + mUrl);
         setTimeout(function () {
             runBackMod(mod, mUrl);
-          }, curr_timeout); 
+          }, curr_timeout);
       } else {
         log.warn(mod.NAME + ' End of page?');
       }
     });
 }
-
-
 
 function runBackwardsModules() {
   log.info("Running Backwards-in-Time modules");
@@ -97,7 +98,7 @@ function runBackwardsModules() {
 
       setTimeout(function () {
           runBackMod(mod, mod.BACKWARDS);
-        }, currTimeout); 
+        }, currTimeout);
 
       currTimeout = currTimeout + TIMEOUT;
     });
@@ -111,40 +112,31 @@ function runBackwardsModules() {
 
 function initModules() {
   modules = [];
-  Fs.readdir(PLUGIN_FOLDER, function (err, files) {
-      if (err) {
-        log.warn('Error while reading files: ' + err);
-      } else {
-        files.forEach(function (file) {
-            if (/\.js$/.test(file)) {
-              var name = getPluginName(file),
-              logger = Log4js.getLogger(name),
-              mods = require(PLUGIN_FOLDER + name).createPlugin(logger);
 
-              log.info('Found plugin: ' + name);
-              mods.forEach(function (module) {
-                  log.debug('Successfully loaded module: ' + module.NAME + ' from Plugin ' + name);
-                  modules.push(module);
-                });
-              //runBackMod(module, module.BACKWARDS);
-            }
+  Fs.readdirSync(PLUGIN_FOLDER).forEach(function (file) {
+      if (/\.js$/.test(file)) {
+        var name = getPluginName(file),
+        logger = Log4js.getLogger(name),
+        mods = require(PLUGIN_FOLDER + name).createPlugin(logger);
+
+        log.info('Found plugin: ' + name);
+        mods.forEach(function (module) {
+            log.debug('Successfully loaded module: ' + module.NAME + ' from Plugin ' + name);
+            modules.push(module);
           });
-        runBackwardsModules(); //TODO needs to have modules intialized before
       }
     });
 }
 
-/** 
+/**
  * runs a live crawl for given module
- *
  * schedules a Live module
  *
  * @param    mod  the module loded by require()
  */
 
 function runLiveMod(mod) {
-
-  Mag.httpGet(mod.LIVE, function (content) {
+  mag.httpGet(mod.LIVE, function (content) {
       var images = mod.getImages(content);
       mag.downloadImages(images);
     });
@@ -152,7 +144,6 @@ function runLiveMod(mod) {
 
 /**
  * Schedules live crawls for all available modules
- *
  * All modules are re-scheduled after TIMEOUT
  *
  */
@@ -165,16 +156,15 @@ function runLiveModules() {
       log.debug("starting module: " + mod.NAME + " at Timeout " + currTimeout);
       setTimeout(function () {
           runLiveMod(mod);
-        }, currTimeout); 
+        }, currTimeout);
       currTimeout = currTimeout + TIMEOUT;
     });
 
-  setTimeout(runLiveModules, currTimeout); 
+  setTimeout(runLiveModules, currTimeout);
 }
-
-
 
 (function main() {
     initModules();
+    runBackwardsModules();
     //runLiveModules(); TODO conditional for running live
   }());
