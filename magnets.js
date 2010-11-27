@@ -12,19 +12,21 @@
 var Fs = require('fs'),
 Sys = require('sys'),
 Log4js = require('log4js'),
+argv = require('optimist').usage('Usage: $0 --loglevel LEVEL').argv,
 Appender = require('./lib/colorappender.js');
 
 var modules = [],
 PLUGIN_FOLDER = __dirname + "/plugins/",
 LOGFILE = __dirname + '/log/magnets.log',
 DEFAULT_TIMEOUT = 10000,
+LOG_LEVEL = argv.loglevel || argv.l || 'INFO';
 TIMEOUT = DEFAULT_TIMEOUT;
 
 Log4js.addAppender(Appender.consoleAppender());
 //Log4js.addAppender(Log4js.fileAppender(LOGFILE), 'magnets');
 
 var log = Log4js.getLogger('magnets');
-log.setLevel('DEBUG');
+log.setLevel(LOG_LEVEL);
 
 var mag = require('./lib/magnetlib').createMaglib({
     imageFolder : __dirname + '/images/',
@@ -46,22 +48,21 @@ process.on('uncaughtException', function (err) {
  * @param   {String} fileName
  * @return  {String}
  */
-
 function getPluginName(fileName) {
   return fileName.split('.')[0];
 }
 
 var curr_timeout = DEFAULT_TIMEOUT; // TODO unGlobalize me
 
-function runBackMod(mod, cUrl) {
-  log.info('backwards crawling ' + cUrl);
+function runBackMod(mod, url) {
+  log.info('backwards crawling ' + url);
 
-  if (!cUrl) {
+  if (!url) {
     log.info(mod.NAME + ' cannot be crawled backwards or is disabled');
     return;
   }
 
-  mag.httpGet(cUrl, function (ret) {
+  mag.httpGet(url, function (ret) {
       var mUrl = mod.getNextUrl(ret),
       imgs = mod.getImages(ret);
 
@@ -107,9 +108,8 @@ function runBackwardsModules() {
 /**
  * Scans the PLUGIN_FOLDER directory for modules
  *
- * all modules are stored inside modules
+ * all modules are stored inside of the modules array
  */
-
 function initModules() {
   modules = [];
 
@@ -134,7 +134,6 @@ function initModules() {
  *
  * @param    mod  the module loded by require()
  */
-
 function runLiveMod(mod) {
   mag.httpGet(mod.LIVE, function (content) {
       var images = mod.getImages(content);
@@ -147,7 +146,6 @@ function runLiveMod(mod) {
  * All modules are re-scheduled after TIMEOUT
  *
  */
-
 function runLiveModules() {
   log.info("Running live modules");
   var currTimeout = 0;
@@ -163,6 +161,11 @@ function runLiveModules() {
   setTimeout(runLiveModules, currTimeout);
 }
 
+
+/*
+ * main function.
+ * magnets is started here
+ */
 (function main() {
     initModules();
     runBackwardsModules();
