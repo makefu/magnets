@@ -66,10 +66,9 @@ function runBackMod(mod, url) {
       var mUrl = mod.getNextUrl(ret),
       imgs = mod.getImages(ret);
 
-      var meta_images  = [];
-      imgs.forEach ( function (img) { // TODO change every plugin
-        meta_images.push({url: img});
-      })
+      var meta_images  = imgs.map(function (img) { // TODO change every plugin
+        return {url: img};
+      });
       if (imgs.length === 0) {
         curr_timeout = curr_timeout / 2;
         log.warn(mUrl[1] + ' no images on page?');
