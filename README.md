@@ -45,6 +45,7 @@ Used node.js libraries:
   * [soupselect for CSS selectors after HTML-parsing](http://github.com/harryf/node-soupselect.git)
   * [Coloredjs for colored VT100 output](http://github.com/pfleidi/colored.js)
   * [node-wwwdude for http-connections](http://github.com/pfleidi/node-wwwdude.git)
+  * [node-dirty to persist meta data](http://github.com/felixge/node-dirty.git)
 
 in short:
 npm install htmlparser soupselect log4js wwwdude optimist
