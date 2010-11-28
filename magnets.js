@@ -66,19 +66,15 @@ function runBackMod(mod, url) {
       var mUrl = mod.getNextUrl(ret),
       imgs = mod.getImages(ret);
 
-      var meta_images  = imgs.map(function (img) { // TODO change every plugin
-        return {url: img};
-      });
       if (imgs.length === 0) {
         curr_timeout = curr_timeout / 2;
-        log.warn(mUrl[1] + ' no images on page?');
+        log.warn(mUrl + ' no images on page?');
       } else {
         curr_timeout = DEFAULT_TIMEOUT;
-        mag.downloadImages(meta_images);
+        mag.downloadImages(imgs);
       }
 
       if (mUrl) {
-        mUrl = mUrl[1];
         log.debug("Next url is: " + mUrl);
         setTimeout(function () {
             runBackMod(mod, mUrl);

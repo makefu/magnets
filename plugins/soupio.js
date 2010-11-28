@@ -7,7 +7,7 @@ exports.createPlugin = function (log) {
   var out = {};
   var MAIN="http://www.soup.io/everyone";
   out.LIVE =  undefined; 
-  out.BACKWARDS = MAIN;
+  out.BACKWARDS = undefined//MAIN;
   out.NAME = "Soup.io plugin";
 
   out.getImages = function getImages(content) { 
@@ -19,19 +19,47 @@ exports.createPlugin = function (log) {
         log.warn("Error: " +err);
       } else {
         try {
-          var ret = Select(dom, 'div[class=imagecontainer]');
+          var ret = Select(dom, 'div[class=content-container]');
           ret.forEach(function (container) {
-            //log.debug('found imagecontainer:'+Sys.inspect(container));
-            container.children.forEach(function (image) {
-              if ( image.name == 'a' ) {
-                log.debug('found big image' + image.attribs['href']);
-                images.push(Url.resolve(content.url,image.attribs['href']));
-              } else if (image.name == 'img') {
-                log.debug('found small image' + image.attribs['src']);
-                images.push(Url.resolve(content.url,image.attribs['src']));
+            var pic = {};
+            pic['tags'] = [];
+            pic['caption'] = "";
+            pic['url'] = "";
 
-              }
-            });
+            try {
+              image_container = Select(container, 'div[class=imagecontainer]')[0];
+              image_container.children.forEach(function (image) {
+                if ( image.name == 'a' ) {
+                  log.debug('found big image' + image.attribs['href']);
+                  pic['url'] =  Url.resolve(content.url,image.attribs['href']);
+                } else if (image.name == 'img') {
+                  log.debug('found small image' + image.attribs['src']);
+                  pic['url'] = Url.resolve(content.url,image.attribs['src']);
+                }
+              });
+            }catch (err) {
+              return; // do not handle this entry
+
+            }
+            try {
+              tag_container = Select(container,'div[class=tags] a');
+              tag_container.forEach(function (tag) {
+                tag_field = tag.children[0].raw;  
+                log.debug('Found Tag: '+tag_field);
+                pic['tags'].push(tag_field);
+              });
+            }catch (err) {
+              log.debug ('No tags?' + err);
+            }
+            try {
+              caption_container = Select(container,'div[class=caption] a');
+              caption_container.forEach(function (caption) {
+                pic['caption'] = caption.attribs['href'];
+              });
+            }catch (err) {
+              log.debug ('No caption?' + err);
+            }
+            images.push(pic);
           });
         } catch (err) {
           log.warn("Something broke? Url:"+content.url);
@@ -44,6 +72,7 @@ exports.createPlugin = function (log) {
     });
     var parser = new Parse.Parser(handler);
     parser.parseComplete(content.data);
+
     return images;
   };
 
@@ -52,7 +81,7 @@ exports.createPlugin = function (log) {
       var match = urlPattern.exec(content.data);
     var parsedUrl = Url.parse(content.url);
     var front =parsedUrl.protocol+'//'+parsedUrl.host+match[1]
-      return [0,front+match[1]]
+      return front+match[1]
   };
 
   return [out];

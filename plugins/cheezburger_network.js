@@ -54,9 +54,9 @@ exports.createPlugin = function (log)
 }
 function genPlugin(log,url) {
     var out = {};
-    var MAIN=url;
+    var MAIN= url;
     out.LIVE =  undefined;
-    out.BACKWARDS = MAIN;
+    out.BACKWARDS = undefined//MAIN;
     out.NAME = url+" plugin";
 
 
@@ -69,9 +69,9 @@ function genPlugin(log,url) {
             } else {
                 ret = Select(dom, 'div[class=entry] img[title]');
                 try {
-                        ret.forEach(function (image){
-                            images.push(Url.resolve(content.url,image.attribs['src']));
-                        });
+                      ret.forEach(function (image){
+                          images.push( { url: Url.resolve(content.url,image.attribs['src'])});
+                      });
                 }catch (err) {
 
                     log.warn("problem with" + content.url +" "+Sys.inspect(ret));
@@ -102,7 +102,7 @@ function genPlugin(log,url) {
         });
         var parser = new Parse.Parser(handler);
         parser.parseComplete(content.data);
-        return [nextUrl,nextUrl];
+        return nextUrl;
     };
 
     return out;

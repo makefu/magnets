@@ -8,12 +8,13 @@ exports.createPlugin = function (log) {
   // redirect
   //
   // TODO automate this!
+  // TODO add changes from soupio.js
   var SESSION_ID='76580dfb264fcc226c1029121c240dc7'
     var USERNAME='makefu'
     var MAIN='http://'+USERNAME+'.soup.io/friends?sessid='+SESSION_ID
     out.NAME = "Soup.io friends plugin";
   out.LIVE =  undefined; 
-  out.BACKWARDS = MAIN;
+  out.BACKWARDS = undefined//MAIN;
 
   out.getImages = function getImages(content) { 
     var images = [];
@@ -31,7 +32,7 @@ exports.createPlugin = function (log) {
                 images.push(Url.resolve(content.url,image.attribs['href']));
               } else if (image.name == 'img') {
                 log.debug('found small image' + image.attribs['src']);
-                images.push(Url.resolve(content.url,image.attribs['src']));
+                images.push( { url : Url.resolve(content.url,image.attribs['src'])});
 
               }
             });
@@ -54,7 +55,7 @@ exports.createPlugin = function (log) {
     var match = urlPattern.exec(content.data);
     var parsedUrl = Url.parse(content.url);
     var front =parsedUrl.protocol+'//'+parsedUrl.host+match[1]
-      return [0,front+match[1]]
+      return front+match[1]
   };
   return [out];
 };
