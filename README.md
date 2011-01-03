@@ -44,7 +44,8 @@ Used node.js libraries:
   * [Node-Htmlparser for Screen Scraping](http://github.com/tautologistics/node-htmlparser)
   * [soupselect for CSS selectors after HTML-parsing](http://github.com/harryf/node-soupselect.git)
   * [node-wwwdude for http-connections](http://github.com/pfleidi/node-wwwdude.git)
-  * [node-dirty to persist meta data](http://github.com/felixge/node-dirty.git)
+  * [mongodb to persist meta data](http://mongodb.org/)
+  * [mongoose as convenience wrapper for mongodb-native](https://github.com/LearnBoost/mongoose/)
 
 in short:
-npm install htmlparser soupselect log4js wwwdude optimist dirty 
+npm install htmlparser soupselect log4js wwwdude optimist mongoose
