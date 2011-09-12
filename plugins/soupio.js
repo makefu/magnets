@@ -7,7 +7,7 @@ exports.createPlugin = function (log) {
   var out = {};
   var MAIN="http://www.soup.io/everyone";
   out.LIVE =  undefined; 
-  out.BACKWARDS = MAIN;
+  out.BACKWARDS = undefined;//MAIN;
   out.NAME = "Soup.io plugin";
 
   out.getImages = function getImages(content) { 

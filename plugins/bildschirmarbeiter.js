@@ -8,7 +8,8 @@ exports.createPlugin = function (log) {
   ///      latest article via www.bildschirmarbeiter.com/pics/all and get the
   ///      first link, this needs to be changed and done automagically
   var BACK = "http://www.bildschirmarbeiter.com/pic/bildschirmarbeiter_-_picdump_08.10.2010/";
-  out.BACKWARDS = BACK;
+  //out.BACKWARDS = BACK;
+  out.BACKWARDS = undefined;
   out.NAME = "Bildschirmarbeiter.com plugin";
 
   out.getImages = function (content) { 

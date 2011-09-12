@@ -56,7 +56,8 @@ function genPlugin(log,url) {
     var out = {};
     var MAIN= url;
     out.LIVE =  undefined;
-    out.BACKWARDS = MAIN;
+    //out.BACKWARDS = MAIN;
+    out.BACKWARDS =undefined;
     out.NAME = url+" plugin";
 
 

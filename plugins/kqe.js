@@ -5,7 +5,8 @@ exports.createPlugin = function (log) {
     var MAIN="http://kqe.de/";
     out.LIVE =  undefined; 
     out.NAME = "KQE.de plugin";
-    out.BACKWARDS = MAIN;
+    //out.BACKWARDS = MAIN;
+    out.BACKWARDS = undefined;
 
     out.getImages = function getImages(content) { 
       var imageFilter = /<a href="(\S*)" target="_blank" rel="lightbox">/g;
