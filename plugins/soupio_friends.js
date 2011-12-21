@@ -12,10 +12,10 @@ exports.createPlugin = function (log) {
     var USERNAME='makefu'
     var MAIN='http://'+USERNAME+'.soup.io/friends?sessid='+SESSION_ID
     out.NAME = "Soup.io friends plugin";
-  out.LIVE =  undefined; 
+  out.LIVE =  undefined;
   out.BACKWARDS = MAIN;
 
-  out.getImages = function getImages(content) { 
+  out.getImages = function getImages(content) {
     var images = [];
     var handler = new Parse.DefaultHandler(function(err,dom) {
       if (err) {
