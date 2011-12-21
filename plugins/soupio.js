@@ -6,11 +6,11 @@ var Mag = require('../lib/magnetlib.js'),
 exports.createPlugin = function (log) {
   var out = {};
   var MAIN="http://www.soup.io/everyone";
-  out.LIVE =  undefined; 
+  out.LIVE =  undefined;
   out.BACKWARDS = MAIN;
   out.NAME = "Soup.io plugin";
 
-  out.getImages = function getImages(content) { 
+  out.getImages = function getImages(content) {
 
     var images = [];
 

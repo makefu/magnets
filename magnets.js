@@ -1,6 +1,6 @@
 /**
  * This is the main scheduler for magnets.js
- * 
+ *
  * It's main purpose is to manage and schedule
  * modules for different websites
  *
@@ -41,7 +41,7 @@ process.on('uncaughtException', function(err) {
 
 /**
  * @param   {String} fileName
- * @return  {String} 
+ * @return  {String}
  */
 
 function getPluginName(fileName) {
@@ -76,7 +76,7 @@ function runBackMod(mod, cUrl) {
         log.debug("Next url is: " + mUrl);
         setTimeout(function () {
             runBackMod(mod, mUrl);
-          }, curr_timeout); 
+          }, curr_timeout);
       } else {
         log.warn(mod.NAME + ' End of page?');
       }
@@ -98,7 +98,7 @@ function runBackwardsModules() {
 
       setTimeout(function () {
           runBackMod(mod, mod.BACKWARDS);
-        }, currTimeout); 
+        }, currTimeout);
 
       currTimeout = currTimeout + TIMEOUT;
     });
@@ -135,7 +135,7 @@ function initModules() {
     });
 }
 
-/** 
+/**
  * runs a live crawl for given module
  *
  * schedules a Live module
@@ -167,11 +167,11 @@ function runLiveModules() {
       log.debug("starting module: " + mod.NAME + " at Timeout " + currTimeout);
       setTimeout(function () {
           runLiveMod(mod);
-        }, currTimeout); 
+        }, currTimeout);
       currTimeout = currTimeout + TIMEOUT;
     });
 
-  setTimeout(runLiveModules, currTimeout); 
+  setTimeout(runLiveModules, currTimeout);
 }
 
 

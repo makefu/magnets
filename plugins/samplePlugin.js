@@ -5,13 +5,13 @@ exports.createPlugin = function (log) {
     /// main page for crawling live streams
     var MAIN = "http://example.org/"
     /// begin of crawling for crawling backwards
-    out.LIVE =  undefined;  
+    out.LIVE =  undefined;
     // replace with MAIN or whatever the link is
-    out.BACKWARDS = undefined; 
+    out.BACKWARDS = undefined;
     out.NAME = "Sample Plugin";
 
     /** @brief returns all funny picture from given http-source
-     * 
+     *
      * this function should return an array of picture urls to be downloaded
      * from a given http Content
      *
@@ -27,7 +27,7 @@ exports.createPlugin = function (log) {
      * @param content of webpage
      * @return array of urls
      */
-    out.getImages = function getImages(content) { 
+    out.getImages = function getImages(content) {
         var imageFilter = /regex to find images/g;
         return Mag.getMatches(imageFilter, content.data);
     };
@@ -36,7 +36,7 @@ exports.createPlugin = function (log) {
      *
      * The next url should be the link to the 'next' page in the timeline
      * @param the content of the page
-     * @return the url string 
+     * @return the url string
      */
     out.getNextUrl = function getNextUrl(content) {
         var urlPattern = /regex to find the next url/

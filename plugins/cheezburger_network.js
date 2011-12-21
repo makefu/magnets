@@ -60,7 +60,7 @@ function genPlugin(log,url) {
     out.NAME = url+" plugin";
 
 
-    out.getImages = function getImages(content) { 
+    out.getImages = function getImages(content) {
         var images =[];
         var handler = new Parse.DefaultHandler(function(err,dom) {
             //log.debug(Sys.inspect(dom))
