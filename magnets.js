@@ -11,8 +11,8 @@
 
 var Fs = require('fs'),
 Sys = require('sys'),
-Log4js = require('log4js')(),
 argv = require('optimist').usage('Usage: $0 --loglevel LEVEL').argv,
+Log4js = require('log4js');
 
 modules = [],
 PLUGIN_FOLDER = __dirname + "/plugins/",
@@ -20,6 +20,9 @@ LOGFILE = __dirname + '/log/magnets.log',
 DEFAULT_TIMEOUT = 10000,
 LOG_LEVEL = argv.loglevel || argv.l || 'INFO';
 TIMEOUT = DEFAULT_TIMEOUT;
+
+Log4js.loadAppender('file');
+Log4js.addAppender(Log4js.appenders.file(LOGFILE), 'magnets');
 
 var log = Log4js.getLogger('magnets');
 log.setLevel(LOG_LEVEL);

@@ -3,3 +3,4 @@
 log/
 images/
 metadata.db
+/node_modules

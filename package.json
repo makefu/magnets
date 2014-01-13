@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "log4js": "*",
+    "optimist": "*",
+    "wwwdude": "*",
+    "htmlparser": "*",
+    "soupselect": "*",
+    "mongodb": "*",
+    "mongoose": "*"
+  }
+}
