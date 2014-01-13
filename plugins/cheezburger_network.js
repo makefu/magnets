@@ -67,7 +67,7 @@ function genPlugin(log,url) {
             if (err) {
                 log.warn("Error: " + err);
             } else {
-                ret = Select(dom, 'div[class=entry] img[title]');
+                ret = Select(dom, 'img[class=event-item-lol-image]');
                 try {
                         ret.forEach(function (image){
                             images.push(Url.resolve(content.url,image.attribs['src']));
@@ -94,7 +94,7 @@ function genPlugin(log,url) {
                 ret = Select(dom, 'a[href]');
                 ret.forEach(function (link){
                     //log.warn(Sys.inspect(link))
-                    if ( link.children && pattern.test(link.children[0].data) ) {
+                    if ( link.children && link.children.length == 2 && pattern.test(link.children[1].data) ) {
                         nextUrl = Url.resolve(content.url,link.attribs['href']);
                     }
                 });
