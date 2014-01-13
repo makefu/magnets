@@ -12,8 +12,7 @@
 var Mag = require('./lib/magnetlib'),
 Fs = require('fs'),
 Sys = require('sys'),
-Log4js = require('log4js'),
-Appender = require('./lib/colorappender.js');
+Log4js = require('log4js');
 
 var modules = [],
 PLUGIN_FOLDER = __dirname + "/plugins/",
@@ -21,8 +20,8 @@ LOGFILE = __dirname + '/log/magnets.log',
 DEFAULT_TIMEOUT = 10000,
 TIMEOUT = DEFAULT_TIMEOUT;
 
-//Log4js.addAppender(Appender.consoleAppender());
-Log4js.addAppender(Log4js.fileAppender(LOGFILE), 'magnets');
+Log4js.loadAppender('file');
+Log4js.addAppender(Log4js.appenders.file(LOGFILE), 'magnets');
 
 var log = Log4js.getLogger('magnets');
 log.setLevel('ERROR');
