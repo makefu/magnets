@@ -12,6 +12,11 @@ It's main purpose is derived from this XKCD quote:
 
 The name was borrowed from [the 'fucking magnets' meme](http://knowyourmeme.com/memes/f-cking-magnets-how-do-they-work).
 
+USAGE
+=====
+
+	npm install
+	PORT=8080 image_folder=/data/images node magnets.js
 
 FEATURES
 =======
