@@ -1,0 +1,14 @@
+# single run of plugins
+
+> node magnets.js list
+<   bildschirmarbeiter - http://www.bildschirmarbeiter.com/pic/inspirational_memes/
+<   http://squee.icanhascheezburger.com/  - http://squee.icanhascheezburger.com/
+<   ...
+
+> node magnets.js grab bildschirmarbeiter http://www.bildschirmarbeiter.com/pic/inspirational_memes/
+<   url-to-first-pic
+<   url-to-second-pic
+<    ...
+
+> node magnets.js next bildschirmarbeiter http://www.bildschirm arbeiter.com/pic/inspirational_memes/
+<   url-to-next-page
