@@ -16,7 +16,8 @@ USAGE
 =====
 
 	npm install
-	PORT=8080 image_folder=/data/images node magnets.js
+	# together with mediengewitter the image_folder should be the same as public/content !
+	image_folder=/data/images node magnets.js
 
 FEATURES
 =======
