@@ -1,1 +1,5 @@
 - missing file endings for some plugin images....
+- icanhascheezburger sends redirects when trying to access the next page to the first page which is not cool
+--> GET http://squee.icanhascheezburger.com/squee/page/2?ref=pagination
+--> REDIRECT http://icanhas.cheezburger.com/squee?ref=pagination
+
